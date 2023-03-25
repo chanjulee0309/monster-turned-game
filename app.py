@@ -63,8 +63,8 @@ class Monster:
 
 monster_list = [
     Monster("슬라임", 50, 8),
-    Monster("슬라임", 50, 8),
-    Monster("슬라임", 50, 8),
+    Monster("주황버섯", 50, 8),
+    Monster("리본돼지", 50, 8),
     Monster("골렘", 100, 15),
     Monster("드래곤", 150, 20),
     Monster("오크", 80, 12),
