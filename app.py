@@ -50,11 +50,19 @@ class Monster:
     def show_status(self):
         print(f"{self.name}의 상태: HP {self.hp}/{self.max_hp}")
 
+monster_list = [
+    Monster("슬라임", 50, 8),
+    Monster("골렘", 100, 15),
+    Monster("드래곤", 150, 20),
+    Monster("오크", 80, 12),
+    Monster("뱀파이어", 120, 18),
+]
+
 print("=== 게임 시작 ===")
 
 player_name = input("플레이어의 이름을 입력하세요: ")
 player = Player(player_name, 100, 20, 10)
-monster = Monster("슬라임", 50, 8)
+monster = random.choice(monster_list)
 
 while True:
     print("\n=== 새로운 턴 ===")
