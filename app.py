@@ -30,6 +30,9 @@ class Player:
     def show_status(self):
         print(f"{self.name}의 상태: HP {self.hp}/{self.max_hp}, MP {self.mp}/{self.max_mp}")
 
+    def turn_end(self):
+        self.mp = min(self.mp + 2, self.max_mp)
+
 class Monster:
     def __init__(self, name, hp, power):
         self.name = name
@@ -66,6 +69,8 @@ while True:
     else:
         print("잘못된 입력입니다. 다시 입력해주세요.")
         continue
+
+    player.turn_end()
 
     if monster.hp == 0:
         print("승리했습니다!")
