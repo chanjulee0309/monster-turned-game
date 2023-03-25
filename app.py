@@ -1,18 +1,19 @@
 import random
 
 class Player:
-    def __init__(self, name, hp, mp, power):
+    def __init__(self, name, hp, mp, power, magic_power):
         self.name = name
         self.max_hp = hp
         self.hp = hp
         self.max_mp = mp
         self.mp = mp
         self.power = power
+        self.magic_power = magic_power
 
     def normal_attack(self, other):
         damage = random.randint(self.power - 2, self.power + 2)
         other.hp = max(other.hp - damage, 0)
-        print(f"{self.name}의 일반공격! {other.name}에게 {damage}의 데미지를 입혔습니다.")
+        print(f"{self.name}의 일반공격! {other.name}에게 {damage}의 일반데미지를 입혔습니다.")
         if other.hp == 0:
             print(f"{other.name}이(가) 쓰러졌습니다.")
 
@@ -21,9 +22,9 @@ class Player:
             print("마나가 부족합니다.")
             return
         self.mp -= 5
-        damage = random.randint(self.power, self.power + 4)
+        damage = random.randint(self.magic_power, self.magic_power + 4)
         other.hp = max(other.hp - damage, 0)
-        print(f"{self.name}의 마법공격! {other.name}에게 {damage}의 데미지를 입혔습니다.")
+        print(f"{self.name}의 마법공격! {other.name}에게 {damage}의 마법데미지를 입혔습니다.")
         if other.hp == 0:
             print(f"{other.name}이(가) 쓰러졌습니다.")
 
@@ -43,7 +44,7 @@ class Monster:
     def attack(self, other):
         damage = random.randint(self.power - 2, self.power + 2)
         other.hp = max(other.hp - damage, 0)
-        print(f"{self.name}의 공격! {other.name}에게 {damage}의 데미지를 입혔습니다.")
+        print(f"{self.name}의 일반공격! {other.name}에게 {damage}의 일반데미지를 입혔습니다.")
         if other.hp == 0:
             print(f"{other.name}이(가) 쓰러졌습니다.")
 
@@ -51,6 +52,9 @@ class Monster:
         print(f"{self.name}의 상태: HP {self.hp}/{self.max_hp}")
 
 monster_list = [
+    Monster("슬라임", 50, 8),
+    Monster("슬라임", 50, 8),
+    Monster("슬라임", 50, 8),
     Monster("슬라임", 50, 8),
     Monster("골렘", 100, 15),
     Monster("드래곤", 150, 20),
@@ -61,7 +65,7 @@ monster_list = [
 print("=== 게임 시작 ===")
 
 player_name = input("플레이어의 이름을 입력하세요: ")
-player = Player(player_name, 100, 20, 10)
+player = Player(player_name, 100, 20, 10, 15)
 monster = random.choice(monster_list)
 
 while True:
