@@ -9,6 +9,7 @@ class Player:
         self.mp = mp
         self.power = power
         self.magic_power = magic_power
+        self.level = 1
 
     def normal_attack(self, other):
         damage = random.randint(self.power - 2, self.power + 2)
@@ -34,6 +35,15 @@ class Player:
     def turn_end(self):
         self.mp = min(self.mp + 2, self.max_mp)
 
+    def level_up(self):
+        self.level += 1
+        self.max_hp += 10
+        self.hp = self.max_hp
+        self.max_mp += 5
+        self.mp = self.max_mp
+        self.power += 2
+        self.magic_power += 3
+
 class Monster:
     def __init__(self, name, hp, power):
         self.name = name
@@ -52,7 +62,6 @@ class Monster:
         print(f"{self.name}의 상태: HP {self.hp}/{self.max_hp}")
 
 monster_list = [
-    Monster("슬라임", 50, 8),
     Monster("슬라임", 50, 8),
     Monster("슬라임", 50, 8),
     Monster("슬라임", 50, 8),
@@ -84,13 +93,42 @@ while True:
 
     player.turn_end()
 
+    current_level = player.level
+    current_hp = player.hp
+    current_mp = player.mp
+    current_power = player.power
+    current_magic_power = player.magic_power
     if monster.hp == 0:
         print("승리했습니다!")
-        break
+        player.level_up()
+        print(f"{player.name}의 레벨이 {player.level}로 올라갔습니다.")
+        print(f"{player.name}의 HP가 {player.max_hp - 10}에서 {player.max_hp}로 증가했습니다.")
+        print(f"{player.name}의 MP가 {player.max_mp - 5}에서 {player.max_mp}로 증가했습니다.")
+        print(f"{player.name}의 공격력이 {player.power - 2}에서 {player.power}로 증가했습니다.")
+        print(f"{player.name}의 마법력이 {player.magic_power - 3}에서 {player.magic_power}로 증가했습니다.")
+        monster_list.remove(monster)  # 몬스터 리스트에서 삭제
+        if not monster_list:
+            print("모든 몬스터를 물리쳤습니다. 게임을 종료합니다.")
+            break
+        monster = random.choice(monster_list)
+        continue
 
     monster.attack(player)
     if player.hp == 0:
-        print("패배했습니다.")
+        print("게임에서 패배했습니다.")
         break
+
+    # 레벨이 올라 갔을 때의 상태를 출력
+    if player.level > current_level:
+        print(f"{player.name}의 레벨이 {player.level}로 올라갔습니다.")
+        print(f"{player.name}의 HP가 {current_hp}에서 {player.hp}로 증가했습니다.")
+        print(f"{player.name}의 MP가 {current_mp}에서 {player.mp}로 증가했습니다.")
+        print(f"{player.name}의 공격력이 {current_power}에서 {player.power}로 증가했습니다.")
+        print(f"{player.name}의 마법력이 {current_magic_power}에서 {player.magic_power}로 증가했습니다.")
+        current_level = player.level
+        current_hp = player.hp
+        current_mp = player.mp
+        current_power = player.power
+        current_magic_power = player.magic_power
 
 print("=== 게임 종료 ===")
