@@ -96,10 +96,10 @@ while True:
     player.show_status()
     monster.show_status()
 
-    action = input("어떤 공격을 사용하시겠습니까? (일반, 마법) ")
-    if action == "일반":
+    action = input("어떤 공격을 사용하시겠습니까? (1: 일반공격, 2: 마법공격) ")
+    if action == "1":
         player.normal_attack(monster)
-    elif action == "마법":
+    elif action == "2":
         player.magic_attack(monster)
     else:
         print("잘못된 입력입니다. 다시 입력해주세요.")
