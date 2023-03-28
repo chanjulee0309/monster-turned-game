@@ -10,15 +10,12 @@ class Character:
         self.hp = hp
         self.power = power
 
-    def attack(self, other):
+    def normal_attack(self, other):
         damage = random.randint(self.power - 2, self.power + 2)
         other.hp = max(other.hp - damage, 0)
-        print(f"{self.name}의 공격! {other.name}에게 {damage}의 데미지를 입혔습니다.")
+        print(f"{self.name}의 일반공격! {other.name}에게 {damage}의 일반데미지를 입혔습니다.")
         if other.hp == 0:
             print(f"{other.name}이(가) 쓰러졌습니다.")
-
-    def show_status(self):
-        print(f"{self.name}의 상태: HP {self.hp}/{self.max_hp}")
 
 class Player(Character):
     def __init__(self, name, hp, mp, power, magic_power):
@@ -27,13 +24,6 @@ class Player(Character):
         self.mp = mp
         self.magic_power = magic_power
         self.level = 1
-
-    def normal_attack(self, other):
-        damage = random.randint(self.power - 2, self.power + 2)
-        other.hp = max(other.hp - damage, 0)
-        print(f"{self.name}의 일반공격! {other.name}에게 {damage}의 일반데미지를 입혔습니다.")
-        if other.hp == 0:
-            print(f"{other.name}이(가) 쓰러졌습니다.")
 
     def magic_attack(self, other):
         if self.mp < 5:
@@ -46,11 +36,8 @@ class Player(Character):
         if other.hp == 0:
             print(f"{other.name}이(가) 쓰러졌습니다.")
 
-    def show_status(self):
+    def player_status(self):
         print(f"{self.name}의 상태: HP {self.hp}/{self.max_hp}, MP {self.mp}/{self.max_mp}")
-
-    def turn_end(self):
-        self.mp = min(self.mp + 2, self.max_mp)
 
     def level_up(self):
         self.level += 1
@@ -65,14 +52,7 @@ class Monster(Character):
     def __init__(self, name, hp, power):
         super().__init__(name, hp, power)
 
-    def attack(self, other):
-        damage = random.randint(self.power - 2, self.power + 2)
-        other.hp = max(other.hp - damage, 0)
-        print(f"{self.name}의 일반공격! {other.name}에게 {damage}의 일반데미지를 입혔습니다.")
-        if other.hp == 0:
-            print(f"{other.name}이(가) 쓰러졌습니다.")
-
-    def show_status(self):
+    def monster_status(self):
         print(f"{self.name}의 상태: HP {self.hp}/{self.max_hp}")
 
 monster_list = [
@@ -93,8 +73,8 @@ monster = random.choice(monster_list)
 
 while True:
     print("\n=== 새로운 턴 ===")
-    player.show_status()
-    monster.show_status()
+    player.player_status()
+    monster.monster_status()
 
     action = input("어떤 공격을 사용하시겠습니까? (1: 일반공격, 2: 마법공격) ")
     if action == "1":
@@ -104,8 +84,6 @@ while True:
     else:
         print("잘못된 입력입니다. 다시 입력해주세요.")
         continue
-
-    player.turn_end()
 
     current_level = player.level
     current_hp = player.hp
@@ -127,7 +105,7 @@ while True:
         monster = random.choice(monster_list)
         continue
 
-    monster.attack(player)
+    monster.normal_attack(player)
     if player.hp == 0:
         print("게임에서 패배했습니다.")
         break
