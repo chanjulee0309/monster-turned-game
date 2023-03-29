@@ -1,5 +1,6 @@
 import random
 
+
 class Character:
     """
     모든 캐릭터의 모체가 되는 클래스
@@ -48,39 +49,39 @@ class Player(Character):
         self.power += 2
         self.magic_power += 3
 
-class Monster(Character):
+class Zombie(Character):
     def __init__(self, name, hp, power):
         super().__init__(name, hp, power)
 
-    def monster_status(self):
+    def zombie_status(self):
         print(f"{self.name}의 상태: HP {self.hp}/{self.max_hp}")
 
-monster_list = [
-    Monster("슬라임", 50, 8),
-    Monster("주황버섯", 50, 8),
-    Monster("리본돼지", 50, 8),
-    Monster("골렘", 100, 15),
-    Monster("드래곤", 150, 20),
-    Monster("오크", 80, 12),
-    Monster("뱀파이어", 120, 18),
+zombie_list = [
+    Zombie("슬라임", 50, 8),
+    Zombie("주황버섯", 50, 8),
+    Zombie("리본돼지", 50, 8),
+    Zombie("골렘", 100, 15),
+    Zombie("드래곤", 150, 20),
+    Zombie("오크", 80, 12),
+    Zombie("뱀파이어", 120, 18),
 ]
 
 print("=== 게임 시작 ===")
 
 player_name = input("플레이어의 이름을 입력하세요: ")
 player = Player(player_name, 100, 20, 10, 15)
-monster = random.choice(monster_list)
+zombie = random.choice(zombie_list)
 
 while True:
     print("\n=== 새로운 턴 ===")
     player.player_status()
-    monster.monster_status()
+    zombie.zombie_status()
 
     action = input("어떤 공격을 사용하시겠습니까? (1: 일반공격, 2: 마법공격) ")
     if action == "1":
-        player.normal_attack(monster)
+        player.normal_attack(zombie)
     elif action == "2":
-        player.magic_attack(monster)
+        player.magic_attack(zombie)
     else:
         print("잘못된 입력입니다. 다시 입력해주세요.")
         continue
@@ -90,7 +91,7 @@ while True:
     current_mp = player.mp
     current_power = player.power
     current_magic_power = player.magic_power
-    if monster.hp == 0:
+    if zombie.hp == 0:
         print("승리했습니다!")
         player.level_up()
         print(f"{player.name}의 레벨이 {player.level}로 올라갔습니다.")
@@ -98,14 +99,14 @@ while True:
         print(f"{player.name}의 MP가 {player.max_mp - 5}에서 {player.max_mp}로 증가했습니다.")
         print(f"{player.name}의 공격력이 {player.power - 2}에서 {player.power}로 증가했습니다.")
         print(f"{player.name}의 마법력이 {player.magic_power - 3}에서 {player.magic_power}로 증가했습니다.")
-        monster_list.remove(monster)  # 몬스터 리스트에서 삭제
-        if not monster_list:
+        zombie_list.remove(zombie)  # 몬스터 리스트에서 삭제
+        if not zombie_list:
             print("모든 몬스터를 물리쳤습니다. 게임을 종료합니다.")
             break
-        monster = random.choice(monster_list)
+        zombie = random.choice(zombie_list)
         continue
 
-    monster.normal_attack(player)
+    zombie.normal_attack(player)
     if player.hp == 0:
         print("게임에서 패배했습니다.")
         break
