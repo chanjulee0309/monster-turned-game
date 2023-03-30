@@ -66,7 +66,6 @@ class Stage:
         self.level = level
         self.zombies = zombies
 
-
 print("=== 게임 시작 ===")
 
 player_name = input("플레이어의 이름을 입력하세요: ")
@@ -85,32 +84,43 @@ stages = [
     Stage("stage 10", 10, [Zombie("보스좀비", 500, 50)])
 ]
 
+
 current_stage_index = 0
 
 while True:
     current_stage = stages[current_stage_index]
     print(f"\n=== {current_stage.name} ===")
-    for zombie in current_stage.zombies:
-        print(f"{zombie.name}이(가) 나타났습니다!")
+
+    for i in range(0, len(current_stage.zombies), 2):
+        zombie1 = current_stage.zombies[i]
+        zombie2 = current_stage.zombies[i + 1] if i + 1 < len(current_stage.zombies) else None
+
+        print(f"{zombie1.name}과(와) {zombie2.name}이(가) 나타났습니다!")
         while True:
             print("\n=== 새로운 턴 ===")
             player.player_status()
-            zombie.zombie_status()
+            zombie1.zombie_status()
+            zombie2.zombie_status()
 
             action = input("어떤 공격을 사용하시겠습니까? (1: 일반공격, 2: 마법공격) ")
             if action == "1":
-                player.normal_attack(zombie)
+                player.normal_attack(zombie1)
+                player.normal_attack(zombie2)
             elif action == "2":
-                player.magic_attack(zombie)
+                player.magic_attack(zombie1)
+                player.magic_attack(zombie2)
             else:
                 print("잘못된 입력입니다. 다시 입력해주세요.")
                 continue
 
-            if zombie.hp == 0:
-                print(f"{zombie.name}을(를) 물리쳤습니다!")
+            if zombie1.hp == 0:
+                print(f"{zombie1.name}을(를) 물리쳤습니다!")
+            if zombie2.hp == 0:
+                print(f"{zombie2.name}을(를) 물리쳤습니다!")
                 break
 
-            zombie.normal_attack(player)
+            zombie1.normal_attack(player)
+            zombie2.normal_attack(player)
             if player.hp == 0:
                 print("게임에서 패배했습니다.")
                 break
