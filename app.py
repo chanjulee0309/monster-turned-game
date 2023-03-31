@@ -66,6 +66,7 @@ class Stage:
         self.level = level
         self.zombies = zombies
 
+
 print("=== 게임 시작 ===")
 
 player_name = input("플레이어의 이름을 입력하세요: ")
@@ -84,7 +85,6 @@ stages = [
     Stage("stage 10", 10, [Zombie("보스좀비", 500, 50)])
 ]
 
-
 current_stage_index = 0
 
 while True:
@@ -100,48 +100,65 @@ while True:
             print("\n=== 새로운 턴 ===")
             player.player_status()
             zombie1.zombie_status()
-            zombie2.zombie_status()
+            if zombie2:
+                zombie2.zombie_status()
 
-            action = input("어떤 공격을 사용하시겠습니까? (1: 일반공격, 2: 마법공격) ")
-            if action == "1":
-                player.normal_attack(zombie1)
-                player.normal_attack(zombie2)
-            elif action == "2":
-                player.magic_attack(zombie1)
-                player.magic_attack(zombie2)
+            if player.hp <= 0:  # 플레이어 체력이 0 이하일 때
+                print("게임에서 패배했습니다.")
+                print("=== 게임 종료 ===")
+                exit()
+
+            target = input("어떤 좀비를 공격하시겠습니까? (1: 좀비 1, 2: 좀비 2) ")
+            if target == "1":
+                player_action = input("어떤 공격을 사용하시겠습니까? (1: 일반 공격, 2: 마법 공격) ")
+                if player_action == "1":
+                    player.normal_attack(zombie1)
+                elif player_action == "2":
+                    player.magic_attack(zombie1)
+                else:
+                    print("잘못된 입력입니다. 다시 입력해주세요.")
+                    continue
+
+                if zombie1.hp == 0:
+                    print(f"{zombie1.name}을(를) 물리쳤습니다!")
+                else:
+                    zombie1.normal_attack(player)
+                if player.hp == 0:
+                    print("게임에서 패배했습니다.")
+                    print("=== 게임 종료 ===")
+                    exit()
+
+            elif target == "2" and zombie2:
+                player_action = input("어떤 공격을 사용하시겠습니까? (1: 일반 공격, 2: 마법 공격) ")
+                if player_action == "1":
+                    player.normal_attack(zombie2)
+                elif player_action == "2":
+                    player.magic_attack(zombie2)
+                else:
+                    print("잘못된 입력입니다. 다시 입력해주세요.")
+                    continue
+
+                if zombie2.hp == 0:
+                    print(f"{zombie2.name}을(를) 물리쳤습니다!")
+                else:
+                    zombie2.normal_attack(player)
+                if player.hp == 0:
+                    print("게임에서 패배했습니다.")
+                    print("=== 게임 종료 ===")
+                    exit()
             else:
                 print("잘못된 입력입니다. 다시 입력해주세요.")
                 continue
 
-            if zombie1.hp == 0:
-                print(f"{zombie1.name}을(를) 물리쳤습니다!")
-            if zombie2.hp == 0:
-                print(f"{zombie2.name}을(를) 물리쳤습니다!")
+            if zombie1.hp == 0 and (not zombie2 or zombie2.hp == 0):
+                print(f"{current_stage.name}을(를) 클리어했습니다!")
+                player.level_up()
+                print(f"{player.name}의 레벨이 {player.level}(으)로 올라갔습니다.")
                 break
 
-            zombie1.normal_attack(player)
-            zombie2.normal_attack(player)
-            if player.hp == 0:
-                print("게임에서 패배했습니다.")
-                break
-
-        if player.hp == 0:
+        current_stage_index += 1
+        if current_stage_index == len(stages):
+            print("모든 스테이지를 클리어했습니다. 게임을 종료합니다.")
             break
 
-    if player.hp == 0:
-        break
-
-    print(f"{current_stage.name}을(를) 클리어했습니다!")
-    player.level_up()
-    print(f"{player.name}의 레벨이 {player.level}로 올라갔습니다.")
-    print(f"{player.name}의 HP가 {player.max_hp - 10}에서 {player.max_hp}로 증가했습니다.")
-    print(f"{player.name}의 MP가 {player.max_mp - 5}에서 {player.max_mp}로 증가했습니다.")
-    print(f"{player.name}의 공격력이 {player.normal_power - 2}에서 {player.normal_power}로 증가했습니다.")
-    print(f"{player.name}의 마법력이 {player.magic_power - 3}에서 {player.magic_power}로 증가했습니다.")
-
-    current_stage_index += 1
-    if current_stage_index == len(stages):
-        print("모든 스테이지를 클리어했습니다. 게임을 종료합니다.")
-        break
-
-print("=== 게임 종료 ===")
+        print("=== 게임 종료 ===")
